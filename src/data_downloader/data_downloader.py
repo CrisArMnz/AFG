@@ -96,28 +96,36 @@ class DataDawnLoader():
     #                 z.extractall(self.data_out_dir)
     #                 print(f"Archivos extraídos en {self.data_out_dir}")
 
-    def extract_zip(self, urls, force_extract=False):
-        processed_files = os.listdir(self.data_out_dir)
-        for url, zip_filename in urls:
-            file_path = self.download_out_dir + zip_filename
-            if force_extract:
-                extract = True
-            elif not zip_filename.replace(".zip", ".parquet") in processed_files:
-                extract = True
-            else:
-                extract = False
-                print("archivo Parquet ya existente")
-            if extract:
-                # Extraer el contenido del archivo ZIP
-                with zipfile.ZipFile(file_path, 'r') as z:
-                    for file in z.namelist():
-                        if file.endswith('.csv'):
-                            csv_path = z.extract(file, self.data_out_dir)
-                            print(f"Convertiendo {csv_path} a Parquet...")
-                            df = pd.read_csv(csv_path, sep=';', encoding='latin-1')
-                            parquet_path = csv_path.replace('.csv', '.parquet')
-                            df.to_parquet(parquet_path, engine='pyarrow', compression='snappy')
-                            os.remove(csv_path)  # Elimina el CSV original
+def extract_zip(self, urls, force_extract=False):
+    processed_files = os.listdir(self.data_out_dir)
+    for url, zip_filename in urls:
+        file_path = self.download_out_dir + zip_filename
+        parquet_filename = zip_filename.replace(".zip", ".parquet")
+
+        if force_extract:
+            extract = True
+        elif parquet_filename not in processed_files:
+            extract = True
+        else:
+            extract = False
+            print(f"Archivo Parquet ya existente: {parquet_filename}")
+
+        if extract:
+            with zipfile.ZipFile(file_path, 'r') as z:
+                for file in z.namelist():
+                    if file.endswith('.csv'):
+                        csv_path = z.extract(file, self.data_out_dir)
+                        print(f"Extraído: {csv_path}")
+
+                        # Convertir CSV a Parquet
+                        df = pd.read_csv(csv_path, sep=';', encoding='latin-1')
+                        parquet_path = os.path.join(self.data_out_dir, parquet_filename)
+                        df.to_parquet(parquet_path, engine='pyarrow', compression='snappy')
+                        print(f"Convertido a Parquet: {parquet_path}")
+
+                        # Eliminar CSV
+                        os.remove(csv_path)
+                        print(f"Archivo CSV eliminado: {csv_path}")
 
     def update_current_year_data(self):
         self.download_zip([self.urls[-1]],force_download=True)
