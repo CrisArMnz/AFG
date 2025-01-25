@@ -23,8 +23,9 @@ from src.data_downloader.data_downloader import DataDawnLoader
 from src.data_process.data_process import DataProcess
 
 import sys
-sys.path.append(r"C:\Users\Cristian\OneDrive\1.-Estudios\1.-Magister Ciencia de Datos\2do Año\Bimestre 10 AFG final\Streamlit")
-from RepositorioStreamlit.src.data_downloader.data_downloader import DataDawnLoader
+sys.path.append(r"./src")  # Ajusta esta ruta según la estructura de tu proyecto
+from data_downloader.data_downloader import DataDawnLoader
+
 
 # Función para cargar los datos
 @st.cache_data
