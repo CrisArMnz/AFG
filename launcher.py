@@ -16,21 +16,18 @@ if __name__ == '__main__':
     data = DataDawnLoader(app_settings["DATA"])
     process = DataProcess(app_settings)
 
-    df = pd.read_excel("process_data\data_filtered.xlsx",index_col=0)
+    df = pd.read_parquet("process_data/data_filtered.parquet")
     current_week =  52 # int(datetime.datetime.now().isocalendar().week)
     current_year =  2024 #int(datetime.datetime.now().isocalendar().year)
     df = df[df["Fecha_Semana"].dt.isocalendar().year == current_year]
     if not df.empty:
-        last_week = pd.to_datetime(df["Fecha_Semana"]).dt.isocalendar().week.max()
-        last_year = pd.to_datetime(df["Fecha_Semana"]).dt.isocalendar().year.max()
-        print(f"Ultima semana del año descargada {last_week} - semana actual {current_week}")
-        if (current_week > last_week) | (last_year < current_year):
+        last_week = df["Fecha_Semana"].dt.isocalendar().week.max()
+        last_year = df["Fecha_Semana"].dt.isocalendar().year.max()
+        if current_week > last_week or last_year < current_year:
             process.get_filter_data(force_process=False)
             data.update_current_year_data()
-            process.update_data()
-        else:
-            print("DATOS ESTAN ACTUALIZADOS")
+            df.to_parquet("process_data/data_filtered.parquet", engine='pyarrow', compression='snappy')
     else:
         process.get_filter_data(force_process=False)
         data.update_current_year_data()
-        process.update_data()
+        df.to_parquet("process_data/data_filtered.parquet", engine='pyarrow', compression='snappy')
