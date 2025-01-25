@@ -1,0 +1,27 @@
+DATA:
+  OUT_DIR: "./compressed files/"
+  DATA_DIR: "./original_data/"
+PROCESS:
+  OUT_FILE_NAME: "data_filtered.xlsx"
+  OUT_DIR: "./process_data/"
+  ID_CAUSAS: [2]
+  LOCAL_INFO: "./assets/Diccionario_establecimientos.csv"
+  REGION_POPULATION_PATH: "./assets/proyeccion_poblacion.csv"
+  REGION_MAPS: {
+                15: "Arica y Parinacota",
+                1: "Tarapacá",
+                2: "Antofagasta",
+                3: "Atacama",
+                4: "Coquimbo",
+                5: "Valparaíso",
+                13: "Metropolitana de Santiago",
+                6: "Libertador General Bernardo O'Higgins",
+                7: "Maule",
+                16: "Ñuble",
+                8: "Biobío",
+                9: "La Araucanía",
+                14: "Los Ríos",
+                10: "Los Lagos",
+                11: "Aysén del General Carlos Ibáñez del Campo",
+                12: "Magallanes y de la Antártica Chilena"
+            }
