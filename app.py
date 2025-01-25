@@ -116,7 +116,7 @@ def actualizar_base_datos():
         data = DataDawnLoader(app_settings["DATA"])
         process = DataProcess(app_settings)
 
-        df = pd.read_excel(app_settings["PROCESS"]["OUT_DIR"] + app_settings["PROCESS"]["OUT_FILE_NAME"],index_col=0)
+        df = pd.read_parquet(app_settings["PROCESS"]["OUT_DIR"] + app_settings["PROCESS"]["OUT_FILE_NAME"])
         current_week =  int(datetime.datetime.now().isocalendar().week)
         current_year =  int(datetime.datetime.now().isocalendar().year)
         df = df[df["Fecha_Semana"].dt.isocalendar().year == current_year]
