@@ -2,7 +2,7 @@ DATA:
   OUT_DIR: "./compressed files/"
   DATA_DIR: "./original_data/"
 PROCESS:
-  OUT_FILE_NAME: "data_filtered.xlsx"
+  OUT_FILE_NAME: "data_filtered.parquet"
   OUT_DIR: "./process_data/"
   ID_CAUSAS: [2]
   LOCAL_INFO: "./assets/Diccionario_establecimientos.csv"
