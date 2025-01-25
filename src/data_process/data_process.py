@@ -55,41 +55,18 @@ class DataProcess():
         self.region_population_path = config["PROCESS"]["REGION_POPULATION_PATH"]
         self.region_maps = config["PROCESS"]["REGION_MAPS"]
 
-    def get_filter_data(self, force_process = False):
-        if force_process:
-            process = True
-        elif self.out_file_name in os.listdir(self.out_dir):
-            process = False
-        else:
-            process = True
-
-        if process:
-            print("INICIANDO PROCESAMIENTO")
-            inputs = []
-            files = os.listdir(self.data_path)
-            files = list(filter(lambda x: "AtencionesUrgencia" in x,files))
-            for file in files:
-                inputs.append((self.data_path + file,copy(self.ids),self.local_info_path, self.region_population_path,self.region_maps))
-
-            def update_progress(value):
-                progress_bar.update(1)
-
-            progress_bar = tqdm(total=len(inputs))
-            freeze_support()
-            if len(inputs) > self.max_processes:
-                pool = Pool(processes=self.max_processes, initargs=(RLock(),), initializer=tqdm.set_lock)
-            else:
-                pool = Pool(processes=len(inputs), initargs=(RLock(),), initializer=tqdm.set_lock)
-            jobs = [pool.apply_async(process_files, args=args_input, callback=update_progress) for args_input in inputs]
-            pool.close()
-            pool.join()
-
-            df = pd.concat([job.get() for job in jobs])
-            df = df.reset_index(drop=True)
-            print(f"GUARDANDO EN {self.out_dir + self.out_file_name}")
-            df.to_excel(self.out_dir + self.out_file_name)
-        else:
-            print("ARCHIVOS YA PROCESADOS")
+def get_filter_data(self, force_process=False):
+    if force_process or self.out_file_name not in os.listdir(self.out_dir):
+        print("INICIANDO PROCESAMIENTO")
+        inputs = [os.path.join(self.data_path, f) for f in os.listdir(self.data_path) if f.endswith('.parquet')]
+        # Procesar los archivos Parquet directamente
+        df = pd.concat([process_files(file, self.ids, self.local_info_path, self.region_population_path, self.region_maps) for file in inputs])
+        df = df.reset_index(drop=True)
+        output_path = os.path.join(self.out_dir, self.out_file_name)
+        print(f"GUARDANDO EN {output_path}")
+        df.to_parquet(output_path, engine='pyarrow', compression='snappy')
+    else:
+        print("ARCHIVOS YA PROCESADOS")
 
     def update_data(self):
         if self.out_file_name in os.listdir(self.out_dir):
