@@ -33,7 +33,7 @@ def load_data(file_path):
     if not os.path.exists(file_path):
         st.error(f"El archivo no se encuentra en la ruta: {file_path}")
         st.stop()
-    df = pd.read_excel(file_path)
+    df = pd.read_parquet(file_path)
     df['Fecha_Semana'] = pd.to_datetime(df['Fecha_Semana'])
     return df
 
