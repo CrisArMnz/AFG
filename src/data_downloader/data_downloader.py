@@ -127,8 +127,7 @@ def extract_zip(self, urls, force_extract=False):
                         os.remove(csv_path)
                         print(f"Archivo CSV eliminado: {csv_path}")
 
-    def update_current_year_data(self):
-        self.download_zip([self.urls[-1]],force_download=True)
-        self.extract_zip([self.urls[-1]],force_extract=True)
-
+def update_current_year_data(self):
+    self.download_zip([self.urls[-1]], force_download=True)
+    self.extract_zip([self.urls[-1]], force_extract=True)
 
