@@ -7,10 +7,9 @@ import time
 from multiprocessing import Pool, freeze_support, RLock
 from copy import copy
 
-def filter_data(file_path,ids):
-    sub_data = pd.read_csv(file_path,sep=";",encoding="latin-1")
-    # Filtrar el DataFrame por los valores de IdCausa
-    df_filtered = sub_data[sub_data['IdCausa'].isin(ids)]
+def filter_data(file_path, ids):
+    df = pd.read_parquet(file_path)  # Leer directamente desde Parquet
+    df_filtered = df[df['IdCausa'].isin(ids)]
     return df_filtered
 
 def drop_cols(df,columns):
@@ -19,8 +18,8 @@ def drop_cols(df,columns):
             df = df.drop(columns=c)
     return df
 
-def process_files(file_path,ids,local_info_path,region_population_path,region_maps):
-    df = filter_data(file_path,ids)
+def process_files(file_path, ids, local_info_path, region_population_path, region_maps):
+    df = filter_data(file_path, ids)
     df = drop_cols(df,['CodigoRegion', 'NombreRegion','CodigoDependencia', 'NombreDependencia', 'CodigoComuna','NombreComuna'])
     local_info = pd.read_csv(local_info_path, sep=",")
     df["IdEstablecimiento"] = df["IdEstablecimiento"].astype(str)
