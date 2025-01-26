@@ -8,3 +8,4 @@ pyyaml
 openpyxl
 tqdm
 geopandas
+matplotlib
