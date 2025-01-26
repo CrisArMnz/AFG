@@ -249,8 +249,8 @@ def main():
     st.header("Gráficos de Atenciones por Región")
     render_bar_chart("process_data/data_filtered.parquet")
 
-    # # Renderizar el gráfico de caja
-    # render_boxplot("process_data/data_filtered.parquet")
+    # Renderizar el gráfico de caja
+    render_boxplot("process_data/data_filtered.parquet")
 
     
     # Información adicional
