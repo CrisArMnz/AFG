@@ -233,6 +233,11 @@ def main():
     # Llamar al gráfico de barras
     st.header("Gráficos de Atenciones por Región")
     render_bar_chart("process_data/data_filtered.parquet")
+
+    # Renderizar el mapa coroplético
+    st.header("Mapa Coroplético de Atenciones")
+    render_choropleth_map("process_data/data_filtered.parquet", "assets/regiones.json")
+    
     
     # Información adicional
     st.sidebar.header("Opciones")
