@@ -138,6 +138,21 @@ def actualizar_base_datos():
     except Exception as e:
         st.error(f"Error al actualizar la base de datos: {e}")
 
+def render_boxplot(data_file):
+    """Genera un gráfico de caja para las observaciones per cápita por región."""
+    # Cargar datos
+    df = pd.read_parquet(data_file)
+
+    # Crear gráfico
+    st.header("Distribución de Observaciones Per Cápita por Región")
+    plt.figure(figsize=(10, 6))
+    sns.boxplot(x="NombreRegion", y="Total_per_capita_2019", data=df)
+    plt.xticks(rotation=45, ha="right")
+    plt.title("Distribución de Observaciones Per Cápita por Región")
+    plt.xlabel("Región")
+    plt.ylabel("Observaciones Per Cápita")
+    st.pyplot(plt)
+
 
 # Función principal
 def main():
@@ -234,9 +249,8 @@ def main():
     st.header("Gráficos de Atenciones por Región")
     render_bar_chart("process_data/data_filtered.parquet")
 
-    # Renderizar el mapa coroplético
-    st.header("Mapa Coroplético de Atenciones Per Cápita")
-    render_choropleth_map("process_data/data_filtered.parquet", "assets/regiones.json")
+    # Renderizar el gráfico de caja
+    render_boxplot("process_data/data_filtered.parquet")
 
     
     # Información adicional
