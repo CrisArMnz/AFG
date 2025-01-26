@@ -38,4 +38,4 @@ def render_bar_chart(data_path):
 # Si deseas probar este módulo de forma independiente
 if __name__ == "__main__":
     st.title("Visualización de Atenciones por Región")
-    render_bar_chart("../../parquet/data_filtered.parquet")
+   render_bar_chart("../process_data/data_filtered.parquet")
