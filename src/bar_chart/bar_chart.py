@@ -21,7 +21,7 @@ def render_bar_chart(data_path):
     df = load_data()
 
     # Control deslizante para seleccionar rango de semanas (máximo 4 semanas)
-    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=4, value=1, step=1)
+    semanas = st.slider("Semanas (Gráfico de Barras):", min_value=1, max_value=4, value=1, step=1)
 
     # Filtrar datos para las últimas N semanas
     ultima_fecha = df['Fecha_Semana'].max()
