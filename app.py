@@ -26,6 +26,7 @@ import sys
 sys.path.append(r"./src")  # Ajusta esta ruta según la estructura de tu proyecto
 from data_downloader.data_downloader import DataDawnLoader
 from bar_chart.bar_chart import render_bar_chart
+from coropleth_map.choropleth_map import render_choropleth_map
 
 # Función para cargar los datos
 @st.cache_data
