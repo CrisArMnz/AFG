@@ -153,7 +153,6 @@ def render_boxplot(data_file):
     ax.set_ylabel("Observaciones Per Cápita")
     st.pyplot(fig)
 
-
 # Función principal
 def main():
     with open("./assets/app_settings.yaml", 'r', encoding='utf-8') as file:
