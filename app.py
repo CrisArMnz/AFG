@@ -229,15 +229,6 @@ def main():
     fig.add_scatter(x=future_dates, y=future_predictions_rescaled.flatten(), mode='lines+markers', name='Proyecciones Futuras')
     st.plotly_chart(fig, use_container_width=True)
 
-    print('parquet')
-    df = pd.read_parquet("process_data/data_filtered.parquet")
-    print(df["CodigoRegion"].unique())
-
-    print('jeison')
-    with open("assets/regiones.json", "r", encoding="utf-8") as f:
-        geojson_data = json.load(f)
-        regions = [feature["properties"]["codigo_region"] for feature in geojson_data["features"]]
-        print(regions)
             
     # Llamar al gráfico de barras
     st.header("Gráficos de Atenciones por Región")
