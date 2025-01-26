@@ -25,7 +25,7 @@ from src.data_process.data_process import DataProcess
 import sys
 sys.path.append(r"./src")  # Ajusta esta ruta según la estructura de tu proyecto
 from data_downloader.data_downloader import DataDawnLoader
-
+from bar_chart import render_bar_chart
 
 # Función para cargar los datos
 @st.cache_data
@@ -227,6 +227,23 @@ def main():
     fig = px.line(df_filtered.reset_index(), x='Fecha_Semana', y='Total_per_capita_2019', title="Valores Reales y Proyecciones")
     fig.add_scatter(x=future_dates, y=future_predictions_rescaled.flatten(), mode='lines+markers', name='Proyecciones Futuras')
     st.plotly_chart(fig, use_container_width=True)
+
+
+    
+    # Llamar al gráfico de barras
+    st.header("Gráficos de Atenciones por Región")
+    render_bar_chart("process_data/data_filtered.parquet")
+    
+    # Información adicional
+    st.sidebar.header("Opciones")
+    st.sidebar.markdown("""
+    Este dashboard permite:
+    - Visualizar las atenciones totales por región.
+    - Analizar los datos procesados dinámicamente.
+    """)
+    
+    # Espacio para futuras visualizaciones
+    st.markdown("### Más visualizaciones estarán disponibles próximamente. 🚀")
 
 if __name__ == "__main__":
     main()
