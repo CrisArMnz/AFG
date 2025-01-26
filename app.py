@@ -235,9 +235,9 @@ def main():
     render_bar_chart("process_data/data_filtered.parquet")
 
     # Renderizar el mapa coroplético
-    st.header("Mapa Coroplético de Atenciones")
+    st.header("Mapa Coroplético de Atenciones Per Cápita")
     render_choropleth_map("process_data/data_filtered.parquet", "assets/regiones.json")
-    
+
     
     # Información adicional
     st.sidebar.header("Opciones")
