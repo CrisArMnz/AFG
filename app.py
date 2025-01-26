@@ -145,13 +145,13 @@ def render_boxplot(data_file):
 
     # Crear gráfico
     st.header("Distribución de Observaciones Per Cápita por Región")
-    plt.figure(figsize=(10, 6))
-    sns.boxplot(x="NombreRegion", y="Total_per_capita_2019", data=df)
-    plt.xticks(rotation=45, ha="right")
-    plt.title("Distribución de Observaciones Per Cápita por Región")
-    plt.xlabel("Región")
-    plt.ylabel("Observaciones Per Cápita")
-    st.pyplot(plt)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.boxplot(x="NombreRegion", y="Total_per_capita_2019", data=df, ax=ax)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
+    ax.set_title("Distribución de Observaciones Per Cápita por Región")
+    ax.set_xlabel("Región")
+    ax.set_ylabel("Observaciones Per Cápita")
+    st.pyplot(fig)
 
 
 # Función principal
