@@ -235,10 +235,10 @@ def main():
 
     print('jeison')
     with open("assets/regiones.json", "r", encoding="utf-8") as f:
-    geojson_data = json.load(f)
-    regions = [feature["properties"]["codigo_region"] for feature in geojson_data["features"]]
-    print(regions)
-        
+        geojson_data = json.load(f)
+        regions = [feature["properties"]["codigo_region"] for feature in geojson_data["features"]]
+        print(regions)
+            
     # Llamar al gráfico de barras
     st.header("Gráficos de Atenciones por Región")
     render_bar_chart("process_data/data_filtered.parquet")
