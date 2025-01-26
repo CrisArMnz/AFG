@@ -30,7 +30,7 @@ def render_choropleth_map(data_path, geojson_path):
     geojson = load_geojson()
 
     # Filtrar las últimas N semanas
-    semanas = st.slider("Semanas (Gráfico de Barras):", min_value=1, max_value=4, value=1, step=1)
+    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=4, value=1, step=1)
     ultima_fecha = df['Fecha_Semana'].max()
     fecha_inicio = ultima_fecha - pd.Timedelta(weeks=semanas)
     df_filtrado = df[(df['Fecha_Semana'] > fecha_inicio) & (df['Fecha_Semana'] <= ultima_fecha)]
