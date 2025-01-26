@@ -14,7 +14,7 @@ def render_choropleth_map(data_path, geojson_path):
     st.header("Mapa Coroplético de Atenciones Per Cápita")
 
     # Cargar datos
-    @st.cache
+    @st.cache_data
     def load_data():
         df = pd.read_parquet(data_path)
         df['Fecha_Semana'] = pd.to_datetime(df['Fecha_Semana'])
