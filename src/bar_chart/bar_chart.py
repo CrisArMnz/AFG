@@ -20,13 +20,17 @@ def render_bar_chart(data_path):
 
     df = load_data()
 
-    # Control deslizante para seleccionar rango de semanas
-    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=10, value=1, step=1)
+    # Control deslizante para seleccionar rango de semanas (máximo 4 semanas)
+    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=4, value=1, step=1)
 
     # Filtrar datos para las últimas N semanas
     ultima_fecha = df['Fecha_Semana'].max()
     fecha_inicio = ultima_fecha - pd.Timedelta(weeks=semanas)
     df_filtrado = df[(df['Fecha_Semana'] > fecha_inicio) & (df['Fecha_Semana'] <= ultima_fecha)]
+
+    if df_filtrado.empty:
+        st.error("No hay suficientes datos para las últimas semanas seleccionadas.")
+        return
 
     # Agrupar datos por región
     df_barras = df_filtrado.groupby("NombreRegion").agg({"Total_per_capita_2019": "sum"}).reset_index()
