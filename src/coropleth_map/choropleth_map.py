@@ -1,57 +1,52 @@
+import json
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-import json
 
-def render_choropleth_map(data_path, geojson_path):
-    """
-    Renderiza un mapa coroplético con las atenciones per cápita por región.
-    
-    Args:
-        data_path (str): Ruta al archivo de datos procesados en formato Parquet.
-        geojson_path (str): Ruta al archivo GeoJSON con las geometrías de las regiones.
-    """
-    st.header("Mapa Coroplético de Atenciones Per Cápita")
+@st.cache_data
+def load_geojson(file_path):
+    """Carga el archivo GeoJSON para el mapa coroplético."""
+    with open(file_path, 'r', encoding='utf-8') as f:
+        geojson_data = json.load(f)
+    return geojson_data
 
-    # Cargar datos
-    @st.cache_data
-    def load_data():
-        df = pd.read_parquet(data_path)
-        df['Fecha_Semana'] = pd.to_datetime(df['Fecha_Semana'])
-        return df
+@st.cache_data
+def load_data(file_path):
+    """Carga el archivo de datos procesados."""
+    return pd.read_parquet(file_path)
 
-    @st.cache
-    def load_geojson():
-        with open(geojson_path, "r", encoding="utf-8") as file:
-            geojson = json.load(file)
-        return geojson
+def filter_data_by_weeks(data, num_weeks):
+    """Filtra los datos por el número de semanas recientes."""
+    max_date = data['Fecha_Semana'].max()
+    min_date = max_date - pd.Timedelta(weeks=num_weeks)
+    return data[(data['Fecha_Semana'] > min_date) & (data['Fecha_Semana'] <= max_date)]
 
-    df = load_data()
-    geojson = load_geojson()
+def render_choropleth_map(data_file, geojson_file):
+    """Genera y muestra un mapa coroplético basado en los datos proporcionados."""
+    # Cargar datos y GeoJSON
+    data = load_data(data_file)
+    geojson_data = load_geojson(geojson_file)
 
-    # Filtrar las últimas N semanas
-    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=4, value=1, step=1)
-    ultima_fecha = df['Fecha_Semana'].max()
-    fecha_inicio = ultima_fecha - pd.Timedelta(weeks=semanas)
-    df_filtrado = df[(df['Fecha_Semana'] > fecha_inicio) & (df['Fecha_Semana'] <= ultima_fecha)]
+    # Seleccionar semanas
+    semanas = st.slider("Número de semanas a visualizar:", min_value=1, max_value=4, value=1)
+    filtered_data = filter_data_by_weeks(data, semanas)
 
-    # Agregar los datos por región
-    df_agrupado = df_filtrado.groupby("CodigoRegion").agg({"Total_per_capita_2019": "sum"}).reset_index()
+    # Agrupar datos por región
+    region_data = filtered_data.groupby('NombreRegion', as_index=False).agg({
+        'Total_per_capita_2019': 'mean'
+    })
 
     # Crear el mapa coroplético
+    st.write(f"### Atenciones Per Cápita - Últimas {semanas} Semana(s)")
     fig = px.choropleth(
-        df_agrupado,
-        geojson=geojson,
-        locations="CodigoRegion",
-        featureidkey="properties.codigo_region",  # Ajusta esto según el archivo GeoJSON
-        color="Total_per_capita_2019",
-        color_continuous_scale="YlOrRd",
-        title=f"Atenciones Per Cápita - Últimas {semanas} Semana(s)",
-        labels={"Total_per_capita_2019": "Atenciones Per Cápita", "CodigoRegion": "Región"}
+        region_data,
+        geojson=geojson_data,
+        locations='NombreRegion',
+        featureidkey='properties.Region',
+        color='Total_per_capita_2019',
+        color_continuous_scale='Reds',
+        title=f"Mapa Coroplético de Atenciones Per Cápita - Últimas {semanas} Semana(s)",
     )
-
-    # Ajustar visualización del mapa
     fig.update_geos(fitbounds="locations", visible=False)
-
-    # Renderizar en Streamlit
     st.plotly_chart(fig, use_container_width=True)
+
