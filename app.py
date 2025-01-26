@@ -23,6 +23,7 @@ from src.data_downloader.data_downloader import DataDawnLoader
 from src.data_process.data_process import DataProcess
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 import sys
 sys.path.append(r"./src")  # Ajusta esta ruta según la estructura de tu proyecto
